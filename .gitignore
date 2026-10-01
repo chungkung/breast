@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.bak_before_header
+checkpoints/
+img_cache/
+logs/
+figures/
+.ipynb_checkpoints/
+.DS_Store

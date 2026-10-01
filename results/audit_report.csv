@@ -1,0 +1,2 @@
+patients,breasts,positive_breasts,positive_patients,prevalence_breast,prevalence_patient,both_views,cc_only,mlo_only,both_view_frac,cancer_both_view_frac,L_breasts,R_breasts,n_machines,n_sites
+11913,23826,492,486,0.02064971040040292,0.040795769327625284,23826,0,0,1.0,1.0,11913,11913,10,2
