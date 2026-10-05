@@ -1,0 +1,7 @@
+=== B2 single-view under zero / P2-learned missing token (seed 42) ===
+(reference: default random token cc=0.1323 mlo=0.0752)
+  cc_zero   AUPRC=0.1321  AUROC=0.6916
+  mlo_zero  AUPRC=0.0754  AUROC=0.6772
+  cc_p2     AUPRC=0.1325  AUROC=0.6914
+  mlo_p2    AUPRC=0.0751  AUROC=0.6770
+M5 DONE
