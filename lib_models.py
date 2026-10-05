@@ -234,11 +234,16 @@ class MissingViewFusion(nn.Module):
         if missing_mode == "dup":
             # Ablation: missing view token -> duplicate of the surviving view's token.
             self.register_buffer("missing_token", torch.zeros(1, 1, cfg.D_MODEL))
+        elif missing_mode == "zero":
+            # Ablation control: missing view -> fixed zero token (no learnable prior).
+            # NOTE: must be a plain buffer, never nn.Parameter, or it would be a
+            # second learnable token and be identical to the "learned" variant.
+            self.register_buffer("missing_token", torch.zeros(1, 1, cfg.D_MODEL))
         elif use_missing_token:
             self.missing_token = nn.Parameter(torch.zeros(1, 1, cfg.D_MODEL))
             nn.init.trunc_normal_(self.missing_token, std=0.02)
         else:
-            # Ablation control: missing view -> zero token (no learnable prior).
+            # Defensive fallback: fixed zero token.
             self.register_buffer("missing_token", torch.zeros(1, 1, cfg.D_MODEL))
         enc = nn.TransformerEncoderLayer(cfg.D_MODEL, cfg.N_HEADS, cfg.D_MODEL * 2,
                                          batch_first=True, dropout=cfg.DROP_RATE)

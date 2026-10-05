@@ -13,6 +13,11 @@ from lib_train import DEVICE
 test_tbl = pd.read_csv("/root/breast_sci_out/splits/test_breast.csv")
 CKPT = "/root/breast_sci_out/checkpoints"
 
+# Fixed RNG seed for the corruption noise. Both methods are re-seeded with this
+# value before their run, so B2 and P2 consume an IDENTICAL Gaussian-noise stream
+# per condition (fair comparison) and the numbers are reproducible.
+NOISE_SEED = 0
+
 def load(m, s=42):
     mo = M.build_model(m, CFG).to(DEVICE)
     mo.load_state_dict(torch.load(f"{CKPT}/model_{m}_seed{s}.pt", map_location=DEVICE))
@@ -39,6 +44,12 @@ def run(mo, noise_cc=0.0, noise_mlo=0.0, fc=True, fm=True):
 
 for m in ("B2", "P2"):
     mo = load(m)
+    # Re-seed identically before each method so B2 and P2 consume the SAME
+    # noise stream per condition. The loader order is deterministic
+    # (shuffle=False), so a matching seed gives a matching noise sequence.
+    torch.manual_seed(NOISE_SEED)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(NOISE_SEED)
     print(f"===== {m} =====", flush=True)
     for name, (nc, nm, fc, fm) in {
         "Full (clean)":              (0.0, 0.0, True, True),
